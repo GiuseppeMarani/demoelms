@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Barbiere - Prenotazioni</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Minimal Black & White Theme - Admin */
+        body {
+            font-family: 'Poppins', sans-serif; background-color: #ffffff; color: #111827; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+        }
+        .card-container {
+            background-color: #ffffff; padding: 2rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03); margin-top: 2rem;
+        }
+        .message { padding: 0.75rem 1rem; margin-bottom: 1rem; border-radius: 0.375rem; font-weight: 500; border: 1px solid; }
+        .message-error { background-color: #fef2f2; color: #991b1b; border-color: #fca5a5; }
+        .message-info { background-color: #f0fdf4; color: #14532d; border-color: #86efac; }
+        .btn { padding: 0.625rem 1.25rem; border-radius: 0.375rem; font-weight: 600; transition: all 0.2s ease-in-out; border: 1px solid transparent; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-primary { background-color: #111827; color: #ffffff; border-color: #111827; }
+        .btn-primary:hover { background-color: #374151; border-color: #374151; }
+        .btn-danger { background-color: #ffffff; color: #991b1b; border: 1px solid #fca5a5; }
+        .btn-danger:hover { background-color: #fef2f2; border-color: #ef4444; }
+        .btn-secondary { background-color: #ffffff; color: #1f2937; border: 1px solid #d1d5db; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03); }
+        .btn-secondary:hover { background-color: #f9fafb; border-color: #9ca3af; }
+        .btn-comment { padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 500; background-color: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; }
+        .btn-comment:hover { background-color: #e5e7eb; border-color: #d1d5db; }
+        input[type="password"] { background-color: #ffffff; border: 1px solid #d1d5db; color: #111827; border-radius: 0.375rem; padding: 0.625rem 0.75rem; transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; width: 100%; }
+        input[type="password"]::placeholder { color: #9ca3af; }
+        input[type="password"]:focus { outline: none; border-color: #374151; box-shadow: 0 0 0 2px rgba(55, 65, 81, 0.1); }
+        h1 { color: #000000; font-weight: 700; }
+        h2 { color: #111827; font-weight: 600; margin-bottom: 1.5rem; }
+        p { color: #4b5563; }
+        .note-text { color: #6b7280; font-size: 0.75rem; }
+        table { border-collapse: separate; border-spacing: 0; border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden; width: 100%; }
+        table thead { background-color: #f9fafb; }
+        table th { color: #374151; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.75rem 1.5rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        table td { padding: 0.75rem 1.5rem; border-bottom: 1px solid #e5e7eb; color: #4b5563; white-space: nowrap; }
+        table tbody tr:last-child td { border-bottom: none; }
+        table tbody tr { transition: background-color 0.15s ease-in-out; }
+        table tbody tr:hover { background-color: #f3f4f6; }
+        #noBookingsMessage { color: #6b7280; }
+        .modal-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 50; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background-color: #ffffff; padding: 2rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); width: 90%; max-width: 600px; transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-close-btn { position: absolute; top: 0.75rem; right: 0.75rem; background: none; border: none; font-size: 1.5rem; color: #9ca3af; cursor: pointer; padding: 0.25rem; line-height: 1; }
+        .modal-close-btn:hover { color: #111827; }
+        .comment-display { background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.375rem; padding: 0.75rem 1rem; margin-top: 0.5rem; min-height: 60px; white-space: pre-wrap; word-wrap: break-word; color: #374151; }
+        .comment-display.empty { font-style: italic; color: #9ca3af; }
+        .date-navigation { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding: 0.5rem; background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; }
+        .date-nav-btn { padding: 0.25rem 0.75rem; font-size: 0.875rem; }
+        .date-nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .current-date-display { font-weight: 600; color: #111827; }
+    </style>
+</head>
+<body class="container mx-auto p-4 md:p-8">
+
+     <div class="flex justify-center mb-10">
+        <img src="logosenzasfondo.png" alt="Logo Barbiere" class="h-20">
+     </div>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-10">Dashboard Amministratore</h1>
+
+     <div id="messageArea" class="mb-4 max-w-md mx-auto"></div>
+
+    <div id="adminLoginSection" class="card-container max-w-sm mx-auto">
+        <h2 class="text-2xl text-center">Accesso Barbiere</h2>
+        <input type="password" id="adminPassword" placeholder="Password Amministratore" class="w-full p-3 mb-5">
+        <button onclick="loginAdmin()" class="w-full btn btn-primary">Accedi</button>
+    </div>
+
+    <div id="adminDashboardSection" style="display: none;" class="card-container max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl !mb-0">Prenotazioni Registrate</h2>
+            <button onclick="logoutAdmin()" class="btn btn-danger !py-1 !px-3 text-sm">Logout</button>
+        </div>
+
+        <div id="dateNavigationContainer" class="date-navigation" style="display: none;">
+            <button id="prevDateBtn" onclick="showPrevDate()" class="btn btn-secondary date-nav-btn">&lt; Giorno Prec.</button>
+            <span id="currentDateDisplay" class="current-date-display"></span>
+            <button id="nextDateBtn" onclick="showNextDate()" class="btn btn-secondary date-nav-btn">Giorno Succ. &gt;</button>
+        </div>
+
+        <div class="overflow-x-auto mt-4">
+            <table class="min-w-full">
+                <thead>
+                    <tr>
+                        <th>Ora</th>
+                        <th>Utente</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingsTableBody"></tbody>
+            </table>
+        </div>
+         <p id="noBookingsMessage" class="text-center note-text mt-6" style="display: none;">Nessuna prenotazione trovata per la data selezionata.</p>
+    </div>
+
+    <div id="commentModal" class="modal-overlay">
+         <div class="modal-content relative">
+             <button onclick="closeCommentModal()" class="modal-close-btn" aria-label="Chiudi modal">&times;</button>
+            <h3 class="text-xl font-semibold mb-4">Dettagli Prenotazione</h3>
+            <div class="grid grid-cols-3 gap-x-4 mb-3 text-sm">
+                <div><span class="font-semibold block text-gray-500">Data:</span><span id="modalBookingDate"></span></div>
+                <div><span class="font-semibold block text-gray-500">Ora:</span><span id="modalBookingTime"></span></div>
+                <div><span class="font-semibold block text-gray-500">Utente:</span><span id="modalBookingUser"></span></div>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-500 mb-1">Commento:</label>
+                <div id="modalBookingComment" class="comment-display"></div>
+            </div>
+            <div class="flex justify-end mt-6"><button onclick="closeCommentModal()" class="btn btn-secondary">Chiudi</button></div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Configurazione ---
+        const ADMIN_PASSWORD = 'passwordsegreta'; // CAMBIA QUESTA PASSWORD!
+        const STORAGE_KEYS = {
+            BOOKINGS: 'barberBookings_bookings',
+            ADMIN_LOGGED_IN: 'barberBookings_adminLoggedIn'
+        };
+
+         // --- Elementi DOM ---
+        // Assicurati che tutti gli ID corrispondano all'HTML
+        const adminLoginSection = document.getElementById('adminLoginSection');
+        const adminDashboardSection = document.getElementById('adminDashboardSection');
+        const bookingsTableBody = document.getElementById('bookingsTableBody');
+        const noBookingsMessage = document.getElementById('noBookingsMessage');
+        const messageArea = document.getElementById('messageArea');
+        const commentModal = document.getElementById('commentModal');
+        const modalBookingDate = document.getElementById('modalBookingDate');
+        const modalBookingTime = document.getElementById('modalBookingTime');
+        const modalBookingUser = document.getElementById('modalBookingUser');
+        const modalBookingComment = document.getElementById('modalBookingComment');
+        const dateNavigationContainer = document.getElementById('dateNavigationContainer');
+        const currentDateDisplay = document.getElementById('currentDateDisplay');
+        const prevDateBtn = document.getElementById('prevDateBtn');
+        const nextDateBtn = document.getElementById('nextDateBtn');
+
+        // --- Stato Applicazione ---
+        let allBookingsCache = [];
+        let sortedBookedDates = [];
+        let currentDateIndex = -1;
+
+        // --- Funzioni Helper ---
+        function getData(key) {
+            try {
+                const data = localStorage.getItem(key);
+                if (data === null || data === '') return [];
+                const parsedData = JSON.parse(data);
+                return Array.isArray(parsedData) ? parsedData : [];
+            } catch (e) {
+                console.error("Errore lettura/parse localStorage:", key, e);
+                try { localStorage.removeItem(key); } catch (removeError) { console.error("Errore rimozione chiave corrotta:", key, removeError); }
+                return [];
+            }
+        }
+        function saveData(key, data) {
+            try {
+                if (!Array.isArray(data)) {
+                    console.error("Tentativo di salvare dati non array:", key, data);
+                    return;
+                }
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (e) {
+                console.error("Errore scrittura localStorage:", key, e);
+                showMessage("Errore nel salvataggio dati.", "error");
+            }
+        }
+        function showMessage(text, type = 'error') {
+             if (!messageArea) return;
+             while (messageArea.firstChild) { messageArea.removeChild(messageArea.firstChild); }
+             const messageDiv = document.createElement('div');
+             messageDiv.className = `message message-${type}`;
+             messageDiv.textContent = text;
+             messageArea.appendChild(messageDiv);
+             setTimeout(() => {
+                if (messageArea.contains(messageDiv)) { messageArea.removeChild(messageDiv); }
+             }, 5000);
+        }
+        function getCurrentDateString() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+         function formatDisplayDate(dateString) {
+             if (!dateString || typeof dateString !== 'string') return 'Data non valida';
+             try {
+                 const [year, month, day] = dateString.split('-').map(Number);
+                 if (isNaN(year) || isNaN(month) || isNaN(day)) return dateString;
+                 const dateObj = new Date(year, month - 1, day);
+                 if (isNaN(dateObj.getTime())) return dateString;
+                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                 let formatted = dateObj.toLocaleDateString('it-IT', options);
+                 return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+             } catch (e) {
+                 console.error("Errore formattazione data:", dateString, e);
+                 return dateString;
+             }
+         }
+
+        // --- Logica Pulizia Prenotazioni Vecchie ---
+        function clearOldBookings() {
+            const allBookings = getData(STORAGE_KEYS.BOOKINGS);
+            if (!Array.isArray(allBookings)) { return; }
+            const todayString = getCurrentDateString();
+            let cleanedCount = 0;
+            const currentBookings = allBookings.filter(booking => {
+                 if (typeof booking?.date !== 'string') {
+                     console.warn("Prenotazione saltata (data mancante o non stringa):", booking);
+                     return true;
+                 }
+                const isPast = booking.date < todayString;
+                if (isPast) { cleanedCount++; }
+                return !isPast;
+            });
+            if (cleanedCount > 0) {
+                saveData(STORAGE_KEYS.BOOKINGS, currentBookings);
+            }
+        }
+
+        // --- Logica Modal Commento ---
+        function openCommentModal(bookingIndexOnPage) {
+             if (currentDateIndex < 0 || currentDateIndex >= sortedBookedDates.length) return;
+             const currentDate = sortedBookedDates[currentDateIndex];
+             const bookingsForCurrentDate = allBookingsCache.filter(b => b && b.date === currentDate);
+
+             if (bookingIndexOnPage < 0 || bookingIndexOnPage >= bookingsForCurrentDate.length) {
+                 console.error("Indice prenotazione sulla pagina non valido:", bookingIndexOnPage); return;
+             }
+             const booking = bookingsForCurrentDate[bookingIndexOnPage];
+
+            if (!booking) { console.error("Prenotazione non trovata per aprire il modal"); return; }
+            if (!modalBookingDate || !modalBookingTime || !modalBookingUser || !modalBookingComment || !commentModal) {
+                 console.error("Uno o più elementi del modal non trovati!"); return;
+            }
+
+            modalBookingDate.textContent = formatDisplayDate(booking.date) || 'N/D';
+            modalBookingTime.textContent = booking.time || 'N/D';
+            modalBookingUser.textContent = booking.user || 'N/D';
+
+            const commentDisplay = modalBookingComment;
+            if (booking.comment && booking.comment.trim() !== '') {
+                commentDisplay.textContent = booking.comment;
+                commentDisplay.classList.remove('empty');
+            } else {
+                commentDisplay.textContent = 'Nessun commento lasciato.';
+                commentDisplay.classList.add('empty');
+            }
+            commentModal.classList.add('active');
+        }
+        function closeCommentModal() {
+            if (!commentModal) return;
+            commentModal.classList.remove('active');
+        }
+
+
+        // --- Logica Admin ---
+        function loginAdmin() {
+            const passwordInput = document.getElementById('adminPassword');
+            if (!passwordInput) {
+                console.error("Elemento input 'adminPassword' non trovato!");
+                showMessage("Errore interno (input non trovato).", "error"); return;
+            }
+            const password = passwordInput.value;
+
+            if (!password) { showMessage('Inserisci la password amministratore.'); return; }
+
+            if (password === ADMIN_PASSWORD) {
+                 try {
+                    sessionStorage.setItem(STORAGE_KEYS.ADMIN_LOGGED_IN, 'true');
+                 } catch(e) {
+                     console.error("Errore scrittura sessionStorage:", e);
+                     showMessage("Errore di sessione. Riprova.", "error"); return;
+                 }
+                 passwordInput.value = '';
+                 messageArea.innerHTML = '';
+                 initializeApp(); // Mostra dashboard
+            } else {
+                showMessage('Password amministratore errata.');
+                passwordInput.value = '';
+            }
+        }
+        function logoutAdmin() {
+             try { sessionStorage.removeItem(STORAGE_KEYS.ADMIN_LOGGED_IN); }
+             catch(e) { console.error("Errore rimozione sessionStorage:", e); }
+            initializeApp(); // Nasconde dashboard
+        }
+        function isAdminLoggedIn() {
+             try { return sessionStorage.getItem(STORAGE_KEYS.ADMIN_LOGGED_IN) === 'true'; }
+             catch(e) { console.error("Errore lettura sessionStorage:", e); return false; }
+        }
+
+        // --- Logica Visualizzazione Prenotazioni per Data ---
+        function displayBookingsForDate(index) {
+             if (!bookingsTableBody || !noBookingsMessage || !dateNavigationContainer || !currentDateDisplay || !prevDateBtn || !nextDateBtn) {
+                 console.error("Elementi UI per la visualizzazione prenotazioni non trovati!"); return;
+             }
+            if (index < 0 || index >= sortedBookedDates.length) {
+                bookingsTableBody.innerHTML = '';
+                noBookingsMessage.style.display = 'block';
+                dateNavigationContainer.style.display = 'none'; return;
+            }
+
+            currentDateIndex = index;
+            const dateToShow = sortedBookedDates[index];
+            const bookingsForDate = allBookingsCache.filter(booking => booking && booking.date === dateToShow);
+
+            bookingsForDate.sort((a, b) => (a?.time || '').localeCompare(b?.time || ''));
+
+            bookingsTableBody.innerHTML = '';
+
+            if (bookingsForDate.length === 0) {
+                noBookingsMessage.style.display = 'block';
+            } else {
+                noBookingsMessage.style.display = 'none';
+                bookingsForDate.forEach((booking, pageIndex) => {
+                    const row = document.createElement('tr');
+                    const hasComment = booking && typeof booking.comment === 'string' && booking.comment.trim() !== '';
+                    const actionButtonHTML = hasComment
+                        ? `<button class="btn btn-comment" onclick="openCommentModal(${pageIndex})">Vedi Commento</button>`
+                        : '';
+                    const displayTime = booking?.time || 'N/D';
+                    const displayUser = booking?.user || 'Sconosciuto';
+
+                    row.innerHTML = `
+                        <td>${displayTime}</td>
+                        <td class="font-medium">${displayUser}</td>
+                        <td>${actionButtonHTML}</td>
+                    `;
+                    bookingsTableBody.appendChild(row);
+                });
+            }
+
+            currentDateDisplay.textContent = formatDisplayDate(dateToShow);
+            prevDateBtn.disabled = index === 0;
+            nextDateBtn.disabled = index === sortedBookedDates.length - 1;
+            dateNavigationContainer.style.display = 'flex';
+        }
+        function showPrevDate() {
+            if (currentDateIndex > 0) { displayBookingsForDate(currentDateIndex - 1); }
+        }
+        function showNextDate() {
+            if (currentDateIndex < sortedBookedDates.length - 1) { displayBookingsForDate(currentDateIndex + 1); }
+        }
+
+
+        // --- Inizializzazione ---
+        function initializeApp() {
+             if (!adminLoginSection || !adminDashboardSection || !bookingsTableBody || !messageArea || !dateNavigationContainer) {
+                  console.error("Errore critico: Elementi HTML admin non trovati all'inizializzazione!");
+                  document.body.innerHTML = '<p class="text-center text-red-600 p-10">Errore critico nel caricamento della pagina admin.</p>';
+                  return;
+             }
+             try {
+                 clearOldBookings();
+
+                 if (isAdminLoggedIn()) {
+                    adminLoginSection.style.display = 'none';
+                    adminDashboardSection.style.display = 'block';
+
+                    allBookingsCache = getData(STORAGE_KEYS.BOOKINGS);
+                    allBookingsCache = allBookingsCache.filter(b => b && typeof b.date === 'string' && typeof b.time === 'string');
+
+                    const uniqueDates = [...new Set(allBookingsCache.map(b => b.date))];
+                    sortedBookedDates = uniqueDates.sort();
+
+                    const todayString = getCurrentDateString();
+                    let initialIndex = sortedBookedDates.indexOf(todayString);
+                    if (initialIndex === -1 && sortedBookedDates.length > 0) {
+                        // Se oggi non c'è, cerca la prima data futura o uguale a oggi
+                        initialIndex = sortedBookedDates.findIndex(date => date >= todayString);
+                        if (initialIndex === -1) { // Se non ci sono date future, mostra l'ultima
+                           initialIndex = sortedBookedDates.length - 1;
+                        }
+                    }
+
+                    if (sortedBookedDates.length > 0 && initialIndex !== -1) {
+                         displayBookingsForDate(initialIndex);
+                    } else {
+                         bookingsTableBody.innerHTML = '';
+                         noBookingsMessage.textContent = "Nessuna prenotazione trovata.";
+                         noBookingsMessage.style.display = 'block';
+                         dateNavigationContainer.style.display = 'none';
+                    }
+
+                } else {
+                    adminLoginSection.style.display = 'block';
+                    adminDashboardSection.style.display = 'none';
+                    dateNavigationContainer.style.display = 'none';
+                }
+             } catch (e) {
+                 console.error("Errore durante l'inizializzazione dell'app admin:", e);
+                 showMessage("Si è verificato un errore imprevisto.", "error");
+                 adminLoginSection.style.display = 'block';
+                 adminDashboardSection.style.display = 'none';
+                 dateNavigationContainer.style.display = 'none';
+             } finally {
+                 if (!isAdminLoggedIn()) messageArea.innerHTML = '';
+                 closeCommentModal();
+             }
+         }
+
+        // Esegui all'avvio
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+        // Chiudi il modal cliccando fuori
+        if (commentModal) {
+            commentModal.addEventListener('click', (event) => {
+                if (event.target === commentModal) { closeCommentModal(); }
+            });
+        } else { console.error("Elemento commentModal non trovato per listener."); }
+
+    </script>
+
+</body>
+</html>
