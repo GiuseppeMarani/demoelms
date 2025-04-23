@@ -9,72 +9,41 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Minimal Black & White Theme - Client */
+        /* Stile Ispirato all'immagine */
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #ffffff;
-            color: #111827;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            font-family: 'Poppins', sans-serif; background-color: #f0f4f8; color: #1f2937; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
         }
-
-        /* Containers */
         .card-container {
-            background-color: #ffffff;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-            margin-bottom: 2rem;
+            background-color: #ffffff; padding: 1.5rem; border-radius: 0.75rem; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); margin-bottom: 2rem;
         }
         .info-bar {
-             background-color: #f9fafb;
-             padding: 1rem;
-             border: 1px solid #e5e7eb;
-             border-radius: 0.5rem;
+             background-color: #ffffff; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.75rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
-
-        /* Date Selector */
-        .date-selector {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-            padding: 0.5rem 1rem;
-            background-color: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.5rem;
+        .days-columns-container {
+            display: flex; overflow-x: auto; padding-bottom: 1rem; gap: 1rem; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #cbd5e1 #f0f4f8;
         }
-        .date-display {
-            font-weight: 600;
-            color: #111827;
-            text-align: center;
-            flex-grow: 1;
+        .days-columns-container::-webkit-scrollbar { height: 8px; }
+        .days-columns-container::-webkit-scrollbar-track { background: #f0f4f8; border-radius: 4px;}
+        .days-columns-container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; border: 2px solid #f0f4f8; }
+        .day-column {
+            flex: 0 0 180px; background-color: #ffffff; border-radius: 0.75rem; border: 1px solid #e5e7eb; padding: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.06);
         }
-        .date-nav-btn {
-            background: none; border: none; padding: 0.5rem; cursor: pointer; color: #374151; font-size: 1.5rem; line-height: 1; border-radius: 9999px; transition: background-color 0.2s ease, color 0.2s ease;
+        .day-header {
+            text-align: center; font-weight: 600; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151;
         }
-        .date-nav-btn:hover:not(:disabled) { background-color: #e5e7eb; color: #111827; }
-        .date-nav-btn:disabled { color: #d1d5db; cursor: not-allowed; }
-
-
-        /* Time Slots */
+        .day-name { display: block; font-size: 0.875rem; }
+        .day-date-num { display: block; font-size: 0.75rem; color: #6b7280; }
         .time-slot {
-            transition: all 0.2s ease-in-out; cursor: pointer; border: 1px solid #d1d5db; background-color: #ffffff; color: #111827; border-radius: 0.375rem; font-weight: 500;
+            display: block; width: 100%; text-align: center; padding: 0.6rem 0.5rem; margin-bottom: 0.5rem; border-radius: 1.5rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; border: none; background-color: #e0f2fe; color: #0c4a6e;
         }
         .time-slot:hover:not(.booked):not(.disabled) {
-            transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04); border-color: #9ca3af; background-color: #f9fafb;
+            background-color: #bae6fd; transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .time-slot.available { }
-        .booked { background-color: #4b5563; color: #f9fafb; border-color: #4b5563; cursor: not-allowed; opacity: 0.8; }
-        .disabled { background-color: #f3f4f6; color: #9ca3af; border-color: #e5e7eb; cursor: not-allowed; opacity: 0.7; }
-
-         /* Messages */
+        .booked { background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; opacity: 0.8; }
+        .disabled { background-color: #f3f4f6; color: #cbd5e1; cursor: not-allowed; opacity: 0.7; }
         .message { padding: 0.75rem 1rem; margin-bottom: 1rem; border-radius: 0.375rem; font-weight: 500; border: 1px solid; }
         .message-error { background-color: #fef2f2; color: #991b1b; border-color: #fca5a5; }
         .message-success { background-color: #f0fdf4; color: #14532d; border-color: #86efac; }
-
-        /* Buttons */
         .btn { padding: 0.625rem 1.25rem; border-radius: 0.375rem; font-weight: 600; transition: all 0.2s ease-in-out; border: 1px solid transparent; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
         .btn-primary { background-color: #111827; color: #ffffff; border-color: #111827; }
         .btn-primary:hover { background-color: #374151; border-color: #374151; }
@@ -84,28 +53,21 @@
         .btn-danger:hover { background-color: #fef2f2; border-color: #ef4444; }
         .text-link { color: #374151; text-decoration: none; font-weight: 500; cursor: pointer; }
         .text-link:hover { text-decoration: underline; color: #000000; }
-
-        /* Input fields */
         input[type="text"], input[type="password"], textarea { background-color: #ffffff; border: 1px solid #d1d5db; color: #111827; border-radius: 0.375rem; padding: 0.625rem 0.75rem; transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; width: 100%; }
         input[type="text"]::placeholder, input[type="password"]::placeholder, textarea::placeholder { color: #9ca3af; }
         input[type="text"]:focus, input[type="password"]:focus, textarea:focus { outline: none; border-color: #374151; box-shadow: 0 0 0 2px rgba(55, 65, 81, 0.1); }
-
-         /* Titles and Text */
-         h1 { color: #000000; font-weight: 700; }
-         h2 { color: #111827; font-weight: 600; margin-bottom: 1.5rem; }
-         p { color: #4b5563; line-height: 1.6; }
-         #loggedInInfo p { color: #374151; }
-         #loggedInInfo strong { color: #000000; font-weight: 600; }
-         .note-text { color: #6b7280; font-size: 0.75rem; }
-
-        /* Modal Styles */
+        h1 { color: #000000; font-weight: 700; }
+        h2 { color: #111827; font-weight: 600; margin-bottom: 1.5rem; }
+        p { color: #4b5563; line-height: 1.6; }
+        #loggedInInfo p { color: #374151; }
+        #loggedInInfo strong { color: #000000; font-weight: 600; }
+        .note-text { color: #6b7280; font-size: 0.75rem; }
         .modal-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 50; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background-color: #ffffff; padding: 2rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); width: 90%; max-width: 500px; transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-content { background-color: #ffffff; padding: 2rem; border-radius: 0.75rem; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); width: 90%; max-width: 500px; transform: scale(0.95); transition: transform 0.3s ease; }
         .modal-overlay.active .modal-content { transform: scale(1); }
         .modal-close-btn { position: absolute; top: 0.75rem; right: 0.75rem; background: none; border: none; font-size: 1.5rem; color: #9ca3af; cursor: pointer; padding: 0.25rem; line-height: 1; }
         .modal-close-btn:hover { color: #111827; }
-
     </style>
 </head>
 <body class="container mx-auto p-4 md:p-8">
@@ -139,27 +101,13 @@
         </div>
     </div>
 
-    <div id="bookingSection" style="display: none;" class="max-w-3xl mx-auto">
-        <div id="loggedInInfo" class="info-bar mb-6 flex justify-between items-center">
+    <div id="bookingSection" style="display: none;" class="w-full mx-auto">
+        <div id="loggedInInfo" class="info-bar mb-6 flex justify-between items-center max-w-4xl mx-auto">
              <p class="text-base">Benvenuto, <strong id="loggedInUsername"></strong>!</p>
              <button onclick="logoutUser()" class="btn btn-danger !py-1 !px-3 text-sm">Logout</button>
         </div>
-
-        <div class="card-container">
-            <div class="date-selector">
-                <button id="prevDayBtn" onclick="showPreviousDay()" class="date-nav-btn" aria-label="Giorno precedente">&lt;</button>
-                <span id="selectedDateDisplay" class="date-display">Data non caricata</span> 
-                <button id="nextDayBtn" onclick="showNextDay()" class="date-nav-btn" aria-label="Giorno successivo">&gt;</button>
-            </div>
-
-            <h2 class="text-xl font-semibold mb-4 text-center !mt-0">Seleziona una fascia oraria:</h2>
-            <div id="timeSlots" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {/* Time slots will be generated here */}
-                 <p id="timeSlotsLoading" class="col-span-full text-center text-gray-500">Caricamento fasce orarie...</p> 
-            </div>
-            <p class="note-text text-center mt-6">
-                Nota: Le fasce orarie sono aggiornate in tempo reale per il giorno selezionato.
-            </p>
+        <div id="daysColumnsContainer" class="days-columns-container">
+            <p id="columnsLoading" class="w-full text-center text-gray-500 p-4">Caricamento calendario...</p>
         </div>
     </div>
 
@@ -168,12 +116,10 @@
              <button onclick="closeBookingModal()" class="modal-close-btn" aria-label="Chiudi modal">&times;</button>
             <h3 class="text-xl font-semibold mb-4 text-center">Conferma Prenotazione</h3>
             <p class="text-center mb-4">Stai prenotando per le <strong id="modalTimeSlot"></strong> di <strong id="modalDateDisplay"></strong>.</p>
-
             <div class="mb-4">
                 <label for="bookingComment" class="block text-sm font-medium text-gray-700 mb-1">Aggiungi un commento (opzionale):</label>
                 <textarea id="bookingComment" name="bookingComment" rows="3" placeholder="Es. tipo di taglio, preferenze..." class="w-full"></textarea>
             </div>
-
             <div class="flex justify-end gap-3">
                 <button onclick="closeBookingModal()" class="btn btn-secondary">Annulla</button>
                 <button onclick="confirmBookingWithComment()" class="btn btn-primary">Conferma Prenotazione</button>
@@ -186,6 +132,7 @@
         // --- Configurazione ---
         const START_HOUR = 9;
         const END_HOUR = 18;
+        const DAYS_TO_SHOW = 7;
         const STORAGE_KEYS = {
             USERS: 'barberBookings_users',
             BOOKINGS: 'barberBookings_bookings',
@@ -193,10 +140,8 @@
         };
 
         // --- Elementi DOM ---
-        // Definiscili qui così sono disponibili globalmente nello script
         const authSection = document.getElementById('authSection');
         const bookingSection = document.getElementById('bookingSection');
-        const timeSlotsContainer = document.getElementById('timeSlots');
         const loggedInUsernameSpan = document.getElementById('loggedInUsername');
         const loginForm = document.getElementById('loginForm');
         const signupForm = document.getElementById('signupForm');
@@ -205,143 +150,103 @@
         const modalTimeSlotSpan = document.getElementById('modalTimeSlot');
         const modalDateDisplaySpan = document.getElementById('modalDateDisplay');
         const bookingCommentTextarea = document.getElementById('bookingComment');
-        const selectedDateDisplay = document.getElementById('selectedDateDisplay');
-        const prevDayBtn = document.getElementById('prevDayBtn');
-        const nextDayBtn = document.getElementById('nextDayBtn');
-        const timeSlotsLoading = document.getElementById('timeSlotsLoading'); // Loading paragraph
+        const daysColumnsContainer = document.getElementById('daysColumnsContainer');
+        const columnsLoading = document.getElementById('columnsLoading');
+
+        // Verifica elementi critici
+        if (!authSection || !bookingSection || !loginForm || !signupForm || !messageArea || !bookingModal || !daysColumnsContainer || !columnsLoading) {
+            console.error("ERRORE CRITICO: Elementi HTML base mancanti!");
+        }
 
         // --- Stato Applicazione ---
-        let selectedDate = new Date();
         let tempBookingData = { date: null, time: null };
 
         // --- Funzioni Helper ---
         function getData(key) {
-             try {
+            try {
                 const data = localStorage.getItem(key);
-                // Aggiunto controllo per stringa vuota o non JSON valido
                 if (data === null || data === '') return [];
-                return JSON.parse(data);
+                const parsedData = JSON.parse(data);
+                return Array.isArray(parsedData) ? parsedData : [];
             } catch (e) {
-                console.error("Errore lettura localStorage:", key, e);
-                // Se i dati sono corrotti, potresti voler resettare
-                // localStorage.removeItem(key);
+                console.error(`Errore lettura/parse localStorage [${key}]:`, e);
+                try { localStorage.removeItem(key); } catch (removeError) { console.error(`Errore rimozione chiave corrotta [${key}]:`, removeError); }
                 return [];
             }
-         }
+        }
         function saveData(key, data) {
-             try {
-                // Assicurati che data sia un array prima di salvarlo
-                if (!Array.isArray(data)) {
-                    console.error("Tentativo di salvare dati non array in localStorage:", key, data);
-                    return; // Non salvare dati corrotti
-                }
+            try {
+                if (!Array.isArray(data)) { console.error(`Tentativo di salvare dati non array [${key}]:`, data); return; }
                 localStorage.setItem(key, JSON.stringify(data));
-            } catch (e) {
-                console.error("Errore scrittura localStorage:", key, e);
-                showMessage("Errore nel salvataggio dati.", "error");
-            }
-         }
+            } catch (e) { console.error(`Errore scrittura localStorage [${key}]:`, e); showMessage("Errore nel salvataggio dati.", "error"); }
+        }
         function showMessage(text, type = 'error') {
-             console.log(`Mostrando messaggio (${type}): ${text}`);
-             // Rimuovi eventuali messaggi esistenti prima di aggiungerne uno nuovo
-             while (messageArea.firstChild) {
-                 messageArea.removeChild(messageArea.firstChild);
-             }
+             if (!messageArea) return;
+             console.log(`Mostrando messaggio (${type}): ${text}`); // Debug
+             while (messageArea.firstChild) { messageArea.removeChild(messageArea.firstChild); }
              const messageDiv = document.createElement('div');
              messageDiv.className = `message message-${type}`;
              messageDiv.textContent = text;
              messageArea.appendChild(messageDiv);
-             setTimeout(() => {
-                // Rimuovi solo se il messaggio è ancora quello appena aggiunto
-                if (messageArea.contains(messageDiv)) {
-                    messageArea.removeChild(messageDiv);
-                }
-             }, 5000);
-         }
+             setTimeout(() => { if (messageArea.contains(messageDiv)) { messageArea.removeChild(messageDiv); } }, 5000);
+        }
         function formatDateYYYYMMDD(date) {
-            if (!(date instanceof Date) || isNaN(date)) {
-                console.error("formatDateYYYYMMDD ha ricevuto una data non valida:", date);
-                return null; // Ritorna null se la data non è valida
-            }
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+             if (!(date instanceof Date) || isNaN(date)) { console.error("formatDateYYYYMMDD: data non valida:", date); return null; }
+             const year = date.getFullYear();
+             const month = String(date.getMonth() + 1).padStart(2, '0');
+             const day = String(date.getDate()).padStart(2, '0');
+             return `${year}-${month}-${day}`;
          }
-        function formatDisplayDate(date) {
-             if (!(date instanceof Date) || isNaN(date)) {
-                console.error("formatDisplayDate ha ricevuto una data non valida:", date);
-                return "Data non valida";
-            }
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            let formatted = date.toLocaleDateString('it-IT', options);
-            return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+        function formatDisplayDate(dateString) {
+             if (!dateString || typeof dateString !== 'string') return 'Data non valida';
+             try {
+                 const [year, month, day] = dateString.split('-').map(Number);
+                 if (isNaN(year) || isNaN(month) || isNaN(day)) return dateString;
+                 const dateObj = new Date(year, month - 1, day);
+                 if (isNaN(dateObj.getTime())) return dateString;
+                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                 let formatted = dateObj.toLocaleDateString('it-IT', options);
+                 return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+             } catch (e) { console.error("Errore formattazione data:", dateString, e); return dateString; }
          }
         function getTodayAtMidnight() {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             return today;
          }
-
-        // --- Logica di Navigazione Data ---
-        function updateDateDisplay() {
-            console.log("updateDateDisplay chiamata con data:", selectedDate); // Debug
-            if (!selectedDateDisplay || !prevDayBtn) {
-                 console.error("Elementi del selettore data non trovati!");
-                 return;
-            }
-             if (!(selectedDate instanceof Date) || isNaN(selectedDate)) {
-                 console.error("selectedDate non è una data valida in updateDateDisplay:", selectedDate);
-                 selectedDateDisplay.textContent = "Errore data";
-                 prevDayBtn.disabled = true;
-                 return;
-            }
-            selectedDateDisplay.textContent = formatDisplayDate(selectedDate);
-            const today = getTodayAtMidnight();
-            prevDayBtn.disabled = selectedDate <= today;
-            console.log("Data visualizzata:", selectedDateDisplay.textContent, "Pulsante Prev disabilitato:", prevDayBtn.disabled); // Debug
-        }
-        function showPreviousDay() {
-            console.log("showPreviousDay chiamata"); // Debug
-            const today = getTodayAtMidnight();
-            if (selectedDate > today) {
-                selectedDate.setDate(selectedDate.getDate() - 1);
-                updateDateDisplay();
-                generateTimeSlots(selectedDate);
-            } else {
-                 console.log("Tentativo di andare prima di oggi, bloccato."); // Debug
-            }
-        }
-        function showNextDay() {
-            console.log("showNextDay chiamata"); // Debug
-            selectedDate.setDate(selectedDate.getDate() + 1);
-            updateDateDisplay();
-            generateTimeSlots(selectedDate);
+        function formatDayHeader(dateString) {
+             if (!dateString || typeof dateString !== 'string') return { dayName: 'Err', shortDate: '' };
+             try {
+                 const [year, month, day] = dateString.split('-').map(Number);
+                 if (isNaN(year) || isNaN(month) || isNaN(day)) return { dayName: 'Err', shortDate: '' };
+                 const dateObj = new Date(year, month - 1, day);
+                 if (isNaN(dateObj.getTime())) return { dayName: 'Err', shortDate: '' };
+                 const dayName = dateObj.toLocaleDateString('it-IT', { weekday: 'short' }).toUpperCase();
+                 const shortDate = dateObj.toLocaleDateString('it-IT', { day: '2-digit', month: 'short' }).toUpperCase();
+                 return { dayName, shortDate };
+             } catch (e) { console.error("Errore formattazione header giorno:", dateString, e); return { dayName: 'Err', shortDate: '' }; }
         }
 
-
-        // --- Logica di Autenticazione (Completa) ---
+        // --- Logica di Autenticazione (Completa e Ripristinata) ---
         function showSignupForm() {
-            console.log("showSignupForm chiamata");
-            if (!loginForm || !signupForm) return; // Check if elements exist
+            console.log("showSignupForm chiamata"); // Debug
+            if (!loginForm || !signupForm) return;
             loginForm.style.display = 'none';
             signupForm.style.display = 'block';
-            messageArea.innerHTML = '';
+            if(messageArea) messageArea.innerHTML = '';
         }
         function showLoginForm() {
-            console.log("showLoginForm chiamata");
-             if (!loginForm || !signupForm) return; // Check if elements exist
+            console.log("showLoginForm chiamata"); // Debug
+             if (!loginForm || !signupForm) return;
             signupForm.style.display = 'none';
             loginForm.style.display = 'block';
-            messageArea.innerHTML = '';
+            if(messageArea) messageArea.innerHTML = '';
         }
         function signupUser() {
-            console.log("signupUser chiamata");
+            console.log("signupUser chiamata"); // Debug
             const usernameInput = document.getElementById('signupUsername');
             const passwordInput = document.getElementById('signupPassword');
-            if (!usernameInput || !passwordInput) {
-                 console.error("Input signup non trovati!"); return;
-            }
+            if (!usernameInput || !passwordInput) { console.error("Input signup non trovati!"); return; }
             const username = usernameInput.value.trim();
             const password = passwordInput.value;
 
@@ -365,36 +270,32 @@
             }
         }
         function loginUser() {
-            console.log("loginUser chiamata");
+            console.log("loginUser chiamata"); // Debug
             const usernameInput = document.getElementById('loginUsername');
             const passwordInput = document.getElementById('loginPassword');
-             if (!usernameInput || !passwordInput) {
-                 console.error("Input login non trovati!"); return;
-            }
+             if (!usernameInput || !passwordInput) { console.error("Input login non trovati!"); return; }
             const username = usernameInput.value.trim();
             const password = passwordInput.value;
 
             if (!username || !password) { showMessage('Per favore, inserisci username e password.'); return; }
 
             const users = getData(STORAGE_KEYS.USERS);
-            if (!Array.isArray(users)) {
-                 console.error("Dati utenti non validi.");
-                 showMessage("Errore dati utenti, riprova.", "error"); return;
-            }
+            if (!Array.isArray(users)) { console.error("Dati utenti non validi."); showMessage("Errore dati utenti, riprova.", "error"); return; }
+
             const user = users.find(u => u && u.username === username && u.password === password);
             if (user) {
-                 console.log("Login riuscito per utente:", username);
+                 console.log("Login riuscito per utente:", username); // Debug
                  try { localStorage.setItem(STORAGE_KEYS.LOGGED_IN_USER, username); }
                  catch (e) { console.error("Errore scrittura localStorage (login):", e); showMessage("Errore durante l'accesso.", "error"); return; }
                 usernameInput.value = ''; passwordInput.value = '';
-                initializeApp();
+                initializeApp(); // Ricarica l'interfaccia
             } else {
-                console.log("Login fallito per utente:", username);
+                console.log("Login fallito per utente:", username); // Debug
                 showMessage('Username o password non validi.');
             }
         }
         function logoutUser() {
-             console.log("logoutUser chiamata");
+             console.log("logoutUser chiamata"); // Debug
              try { localStorage.removeItem(STORAGE_KEYS.LOGGED_IN_USER); }
              catch (e) { console.error("Errore rimozione localStorage (logout):", e); }
             initializeApp();
@@ -406,21 +307,11 @@
 
         // --- Logica Modal Prenotazione ---
         function openBookingModal(date, time) {
-            console.log(`openBookingModal chiamata per ${date} ${time}`); // Debug
-            if (!modalTimeSlotSpan || !modalDateDisplaySpan || !bookingCommentTextarea || !bookingModal) {
-                 console.error("Elementi del modal non trovati!"); return;
-            }
+             if (!modalTimeSlotSpan || !modalDateDisplaySpan || !bookingCommentTextarea || !bookingModal) return;
             tempBookingData.date = date;
             tempBookingData.time = time;
             modalTimeSlotSpan.textContent = time;
-            try {
-                const [year, month, day] = date.split('-').map(Number);
-                const displayModalDate = new Date(year, month - 1, day);
-                modalDateDisplaySpan.textContent = formatDisplayDate(displayModalDate);
-            } catch (e) {
-                 console.error("Errore nel formattare la data per il modal:", e);
-                 modalDateDisplaySpan.textContent = date; // Mostra la stringa YYYY-MM-DD come fallback
-            }
+            modalDateDisplaySpan.textContent = formatDisplayDate(date);
             bookingCommentTextarea.value = '';
             bookingModal.classList.add('active');
         }
@@ -432,93 +323,98 @@
         }
 
         // --- Logica delle Prenotazioni ---
-        function generateTimeSlots(dateToDisplay) {
-             console.log("generateTimeSlots chiamata per data:", dateToDisplay); // Debug
-             if (!timeSlotsContainer || !timeSlotsLoading) {
-                 console.error("Contenitore fasce orarie o messaggio di loading non trovato!");
-                 return;
-             }
-             if (!(dateToDisplay instanceof Date) || isNaN(dateToDisplay)) {
-                 console.error("generateTimeSlots ha ricevuto una data non valida:", dateToDisplay);
-                 timeSlotsContainer.innerHTML = '<p class="col-span-full text-center text-red-600">Errore: Data non valida.</p>';
-                 timeSlotsLoading.style.display = 'none';
-                 return;
-             }
+        function generateTimeSlotsForDay(dateString, columnElement) {
+            const slotsContainer = columnElement.querySelector('.time-slots-wrapper');
+            if (!slotsContainer) { console.error("Contenitore slot non trovato per la colonna:", dateString); return; }
+            slotsContainer.innerHTML = '';
 
-            timeSlotsContainer.innerHTML = ''; // Pulisce slot precedenti
-            timeSlotsLoading.style.display = 'block'; // Mostra messaggio di caricamento
+            const bookings = getData(STORAGE_KEYS.BOOKINGS);
+            if (!Array.isArray(bookings)) return;
 
-            const dateString = formatDateYYYYMMDD(dateToDisplay);
-            if (!dateString) { // Se formatDateYYYYMMDD ritorna null
-                 timeSlotsContainer.innerHTML = '<p class="col-span-full text-center text-red-600">Errore formattazione data.</p>';
-                 timeSlotsLoading.style.display = 'none';
-                 return;
-            }
-            console.log("Generating slots for YYYY-MM-DD:", dateString);
+            const now = new Date();
+            const today = getTodayAtMidnight();
+            const [year, month, day] = dateString.split('-').map(Number);
+            const selectedDayMidnight = new Date(year, month - 1, day);
 
-            // Usiamo un piccolo timeout per simulare il caricamento e permettere al DOM di aggiornarsi
-            // In un'app reale, qui faresti una chiamata API
-            setTimeout(() => {
-                try {
-                    const bookings = getData(STORAGE_KEYS.BOOKINGS);
-                    if (!Array.isArray(bookings)) {
-                         console.error("Dati prenotazioni non validi recuperati.");
-                         throw new Error("Formato dati prenotazioni non valido."); // Lancia errore per il catch
-                    }
+            const isToday = selectedDayMidnight.getTime() === today.getTime();
+            const isPastDay = selectedDayMidnight < today;
 
-                    const now = new Date();
-                    const today = getTodayAtMidnight();
-                    const selectedDayMidnight = new Date(dateToDisplay);
-                    selectedDayMidnight.setHours(0,0,0,0);
+            let slotsGenerated = 0; // Contatore per vedere se generiamo qualcosa
 
-                    const isToday = selectedDayMidnight.getTime() === today.getTime();
-                    const isPastDay = selectedDayMidnight < today;
-                    let slotsAvailable = false; // Flag per vedere se c'è almeno uno slot
+            for (let hour = START_HOUR; hour < END_HOUR; hour++) {
+                const time = `${String(hour).padStart(2, '0')}:00`;
+                const isBooked = bookings.some(booking => booking && booking.date === dateString && booking.time === time);
+                let isPastTime = false;
+                if (isToday) { isPastTime = hour < now.getHours(); }
 
-                    for (let hour = START_HOUR; hour < END_HOUR; hour++) {
-                        const time = `${String(hour).padStart(2, '0')}:00`;
-                        const slotId = `slot-${dateString}-${time}`;
+                // Non generare slot per giorni passati (anche se non dovrebbero essere mostrati)
+                if (isPastDay) continue;
 
-                        const isBooked = bookings.some(booking => booking && booking.date === dateString && booking.time === time);
+                const slotElement = document.createElement('button');
+                slotElement.textContent = time;
+                slotElement.classList.add('time-slot');
 
-                        let isPastTime = false;
-                        if (isPastDay) { isPastTime = true; }
-                        else if (isToday) { isPastTime = hour < now.getHours(); }
-
-                        const slotElement = document.createElement('div');
-                        slotElement.id = slotId;
-                        slotElement.textContent = time;
-                        slotElement.classList.add('time-slot', 'p-3', 'text-center');
-
-                        if (isBooked) {
-                            slotElement.classList.add('booked');
-                            slotElement.title = 'Fascia oraria già prenotata';
-                        } else if (isPastTime) {
-                             slotElement.classList.add('disabled');
-                             slotElement.title = 'Fascia oraria passata';
-                        } else {
-                            slotElement.classList.add('available');
-                            slotElement.onclick = () => openBookingModal(dateString, time);
-                            slotElement.title = 'Clicca per prenotare';
-                            slotsAvailable = true; // Trovato almeno uno slot
-                        }
-                        timeSlotsContainer.appendChild(slotElement);
-                    }
-                    // Se non ci sono slot disponibili (es. tutti passati o prenotati), mostra un messaggio?
-                    // if (!slotsAvailable && !isPastDay) {
-                    //     // Potresti aggiungere un messaggio qui se vuoi
-                    // }
-                } catch (error) {
-                     console.error("Errore durante la generazione degli slot:", error);
-                     timeSlotsContainer.innerHTML = '<p class="col-span-full text-center text-red-600">Errore nel caricare le fasce orarie.</p>';
-                } finally {
-                     timeSlotsLoading.style.display = 'none'; // Nasconde messaggio di caricamento
+                if (isBooked) {
+                    slotElement.classList.add('booked');
+                    slotElement.title = 'Fascia oraria già prenotata';
+                    slotElement.disabled = true;
+                } else if (isPastTime) {
+                     slotElement.classList.add('disabled');
+                     slotElement.title = 'Fascia oraria passata';
+                     slotElement.disabled = true;
+                } else {
+                    slotElement.classList.add('available');
+                    slotElement.onclick = () => openBookingModal(dateString, time);
+                    slotElement.title = 'Clicca per prenotare';
                 }
-            }, 50); // Breve timeout di 50ms
+                slotsContainer.appendChild(slotElement);
+                slotsGenerated++;
+            }
+             // Se non abbiamo generato slot (es. tutti passati o prenotati), mostra un messaggio
+             if (slotsGenerated === 0) {
+                 slotsContainer.innerHTML = '<p class="text-xs text-center text-gray-400 py-4">Nessun orario disponibile.</p>';
+             }
+        }
+        function createDayColumns() {
+            if (!daysColumnsContainer || !columnsLoading) return;
+            daysColumnsContainer.innerHTML = '';
+            columnsLoading.style.display = 'block';
 
+            const today = getTodayAtMidnight();
+            const datesToShow = [];
+            for (let i = 0; i < DAYS_TO_SHOW; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                const dateStr = formatDateYYYYMMDD(date);
+                if(dateStr) datesToShow.push(dateStr); // Aggiungi solo se la formattazione ha successo
+            }
+
+             if (datesToShow.length === 0) {
+                 columnsLoading.textContent = 'Nessun giorno disponibile.'; return;
+             }
+
+            datesToShow.forEach(dateString => {
+                const column = document.createElement('div');
+                column.classList.add('day-column');
+                column.dataset.date = dateString;
+
+                const { dayName, shortDate } = formatDayHeader(dateString);
+
+                column.innerHTML = `
+                    <div class="day-header">
+                        <span class="day-name">${dayName}</span>
+                        <span class="day-date-num">${shortDate}</span>
+                    </div>
+                    <div class="time-slots-wrapper">
+                        <p class="text-xs text-center text-gray-400 py-4">Caricamento...</p>
+                    </div>
+                `;
+                daysColumnsContainer.appendChild(column);
+                setTimeout(() => generateTimeSlotsForDay(dateString, column), 10);
+            });
+            columnsLoading.style.display = 'none';
         }
         function confirmBookingWithComment() {
-            console.log("confirmBookingWithComment chiamata"); // Debug
             const loggedInUser = getLoggedInUser();
             const { date, time } = tempBookingData;
             const comment = bookingCommentTextarea.value.trim();
@@ -526,56 +422,38 @@
             if (!loggedInUser || !date || !time) { showMessage('Errore durante la prenotazione. Riprova.'); closeBookingModal(); return; }
 
             const bookings = getData(STORAGE_KEYS.BOOKINGS);
-            if (!Array.isArray(bookings)) { console.error("Dati prenotazioni non validi prima del salvataggio."); showMessage("Errore dati prenotazioni.", "error"); closeBookingModal(); return; }
+            if (!Array.isArray(bookings)) { showMessage("Errore dati prenotazioni.", "error"); closeBookingModal(); return; }
 
             const alreadyBooked = bookings.some(booking => booking && booking.date === date && booking.time === time);
-            if (alreadyBooked) { showMessage('Spiacenti, questa fascia oraria è stata appena prenotata.'); closeBookingModal(); generateTimeSlots(selectedDate); return; }
+            if (alreadyBooked) { showMessage('Spiacenti, questa fascia oraria è stata appena prenotata.'); closeBookingModal(); return; }
 
             bookings.push({ date: date, time: time, user: loggedInUser, comment: comment });
             saveData(STORAGE_KEYS.BOOKINGS, bookings);
 
-            // Usa formatDisplayDate per mostrare la data nel messaggio
-            let displayDateForMessage = date;
-            try {
-                 const [year, month, day] = date.split('-').map(Number);
-                 displayDateForMessage = formatDisplayDate(new Date(year, month - 1, day));
-            } catch(e) { /* Usa la stringa YYYY-MM-DD se il parsing fallisce */ }
-
-            showMessage(`Appuntamento prenotato per le ${time} di ${displayDateForMessage}!`, 'success');
+            showMessage(`Appuntamento prenotato per le ${time} di ${formatDisplayDate(date)}!`, 'success');
             closeBookingModal();
-            generateTimeSlots(selectedDate);
-        }
 
+            const columnToUpdate = daysColumnsContainer.querySelector(`.day-column[data-date="${date}"]`);
+            if (columnToUpdate) {
+                generateTimeSlotsForDay(date, columnToUpdate);
+            } else { console.warn("Colonna da aggiornare non trovata:", date); }
+        }
 
         // --- Inizializzazione ---
         function initializeApp() {
              console.log("initializeApp chiamata");
-             // Assicurati che gli elementi principali esistano prima di procedere
-             if (!authSection || !bookingSection || !selectedDateDisplay || !timeSlotsContainer) {
-                 console.error("Errore critico: Elementi HTML principali non trovati!");
-                 document.body.innerHTML = '<p class="text-center text-red-600 p-10">Errore critico nel caricamento della pagina. Controlla la console.</p>';
-                 return;
-             }
+             if (!authSection || !bookingSection || !daysColumnsContainer) { console.error("ERRORE CRITICO: Elementi HTML mancanti!"); return; }
              try {
-                 if (!localStorage.getItem(STORAGE_KEYS.USERS) || !Array.isArray(getData(STORAGE_KEYS.USERS))) { console.log("Inizializzo storage utenti"); saveData(STORAGE_KEYS.USERS, []); }
-                 if (!localStorage.getItem(STORAGE_KEYS.BOOKINGS) || !Array.isArray(getData(STORAGE_KEYS.BOOKINGS))) { console.log("Inizializzo storage prenotazioni"); saveData(STORAGE_KEYS.BOOKINGS, []); }
-
-                selectedDate = new Date();
-                selectedDate.setHours(0, 0, 0, 0);
-                updateDateDisplay(); // Chiama per mostrare la data iniziale
+                 if (!localStorage.getItem(STORAGE_KEYS.USERS) || !Array.isArray(getData(STORAGE_KEYS.USERS))) { saveData(STORAGE_KEYS.USERS, []); }
+                 if (!localStorage.getItem(STORAGE_KEYS.BOOKINGS) || !Array.isArray(getData(STORAGE_KEYS.BOOKINGS))) { saveData(STORAGE_KEYS.BOOKINGS, []); }
 
                 const loggedInUser = getLoggedInUser();
-                 console.log("Utente loggato:", loggedInUser);
+                console.log("Utente loggato:", loggedInUser);
                 if (loggedInUser) {
                     authSection.style.display = 'none';
                     bookingSection.style.display = 'block';
-                    // Assicurati che loggedInUsernameSpan esista prima di impostare textContent
-                    if (loggedInUsernameSpan) {
-                         loggedInUsernameSpan.textContent = loggedInUser;
-                    } else {
-                         console.warn("Elemento loggedInUsername non trovato.");
-                    }
-                    generateTimeSlots(selectedDate); // Genera slot per oggi
+                    if (loggedInUsernameSpan) loggedInUsernameSpan.textContent = loggedInUser;
+                    createDayColumns();
                 } else {
                     authSection.style.display = 'block';
                     bookingSection.style.display = 'none';
@@ -583,31 +461,27 @@
              } catch (e) {
                  console.error("Errore durante l'inizializzazione:", e);
                  showMessage("Si è verificato un errore caricando l'app.", "error");
-                 authSection.style.display = 'block';
-                 bookingSection.style.display = 'none';
+                 if(authSection) authSection.style.display = 'block';
+                 if(bookingSection) bookingSection.style.display = 'none';
              } finally {
-                 messageArea.innerHTML = '';
+                 if(messageArea) messageArea.innerHTML = '';
                  closeBookingModal();
+                 console.log("initializeApp completata.");
              }
         }
 
         // Esegui all'avvio
-        console.log("Aggiungo listener DOMContentLoaded...");
         document.addEventListener('DOMContentLoaded', initializeApp);
-        console.log("Listener DOMContentLoaded aggiunto.");
 
         // Chiudi il modal cliccando fuori
-         if (bookingModal) { // Aggiunto controllo esistenza modal
+        if (bookingModal) {
             bookingModal.addEventListener('click', (event) => {
-                if (event.target === bookingModal) {
-                    closeBookingModal();
-                }
+                if (event.target === bookingModal) { closeBookingModal(); }
             });
-         } else {
-              console.error("Elemento bookingModal non trovato, impossibile aggiungere listener.");
-         }
+        }
 
     </script>
 
 </body>
 </html>
+
