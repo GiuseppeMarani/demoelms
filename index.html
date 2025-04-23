@@ -9,36 +9,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Stile Ispirato all'immagine */
-        body {
-            font-family: 'Poppins', sans-serif; background-color: #f0f4f8; color: #1f2937; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-        }
-        .card-container {
-            background-color: #ffffff; padding: 1.5rem; border-radius: 0.75rem; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); margin-bottom: 2rem;
-        }
-        .info-bar {
-             background-color: #ffffff; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.75rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-        .days-columns-container {
-            display: flex; overflow-x: auto; padding-bottom: 1rem; gap: 1rem; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #cbd5e1 #f0f4f8;
-        }
+        /* Stile Cliente con API PHP */
+        body { font-family: 'Poppins', sans-serif; background-color: #f0f4f8; color: #1f2937; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .card-container { background-color: #ffffff; padding: 1.5rem; border-radius: 0.75rem; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); margin-bottom: 2rem; }
+        .info-bar { background-color: #ffffff; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.75rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
+        .days-columns-container { display: flex; overflow-x: auto; padding-bottom: 1rem; gap: 1rem; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #cbd5e1 #f0f4f8; }
         .days-columns-container::-webkit-scrollbar { height: 8px; }
         .days-columns-container::-webkit-scrollbar-track { background: #f0f4f8; border-radius: 4px;}
         .days-columns-container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; border: 2px solid #f0f4f8; }
-        .day-column {
-            flex: 0 0 180px; background-color: #ffffff; border-radius: 0.75rem; border: 1px solid #e5e7eb; padding: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.06);
-        }
-        .day-header {
-            text-align: center; font-weight: 600; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151;
-        }
+        .day-column { flex: 0 0 180px; background-color: #ffffff; border-radius: 0.75rem; border: 1px solid #e5e7eb; padding: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.06); }
+        .day-header { text-align: center; font-weight: 600; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid #f3f4f6; color: #374151; }
         .day-name { display: block; font-size: 0.875rem; }
         .day-date-num { display: block; font-size: 0.75rem; color: #6b7280; }
-        .time-slot {
-            display: block; width: 100%; text-align: center; padding: 0.6rem 0.5rem; margin-bottom: 0.5rem; border-radius: 1.5rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; border: none; background-color: #e0f2fe; color: #0c4a6e;
-        }
-        .time-slot:hover:not(.booked):not(.disabled) {
-            background-color: #bae6fd; transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+        .time-slot { display: block; width: 100%; text-align: center; padding: 0.6rem 0.5rem; margin-bottom: 0.5rem; border-radius: 1.5rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; border: none; background-color: #e0f2fe; color: #0c4a6e; }
+        .time-slot:hover:not(.booked):not(.disabled) { background-color: #bae6fd; transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .booked { background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; opacity: 0.8; }
         .disabled { background-color: #f3f4f6; color: #cbd5e1; cursor: not-allowed; opacity: 0.7; }
         .message { padding: 0.75rem 1rem; margin-bottom: 1rem; border-radius: 0.375rem; font-weight: 500; border: 1px solid; }
@@ -61,7 +45,6 @@
         p { color: #4b5563; line-height: 1.6; }
         #loggedInInfo p { color: #374151; }
         #loggedInInfo strong { color: #000000; font-weight: 600; }
-        .note-text { color: #6b7280; font-size: 0.75rem; }
         .modal-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 50; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-content { background-color: #ffffff; padding: 2rem; border-radius: 0.75rem; border: 1px solid #e5e7eb; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); width: 90%; max-width: 500px; transform: scale(0.95); transition: transform 0.3s ease; }
@@ -106,7 +89,7 @@
              <p class="text-base">Benvenuto, <strong id="loggedInUsername"></strong>!</p>
              <button onclick="logoutUser()" class="btn btn-danger !py-1 !px-3 text-sm">Logout</button>
         </div>
-        <div id="daysColumnsContainer" class="days-columns-container">
+        <div id="daysColumnsContainer" class="days-columns-container px-4">
             <p id="columnsLoading" class="w-full text-center text-gray-500 p-4">Caricamento calendario...</p>
         </div>
     </div>
@@ -133,10 +116,9 @@
         const START_HOUR = 9;
         const END_HOUR = 18;
         const DAYS_TO_SHOW = 7;
+        const API_URL = 'api.php'; // Assicurati che il percorso sia corretto
         const STORAGE_KEYS = {
-            USERS: 'barberBookings_users',
-            BOOKINGS: 'barberBookings_bookings',
-            LOGGED_IN_USER: 'barberBookings_loggedInUser'
+            LOGGED_IN_USER: 'barberBookings_loggedInUser_ss' // Solo per sessionStorage
         };
 
         // --- Elementi DOM ---
@@ -160,29 +142,13 @@
 
         // --- Stato Applicazione ---
         let tempBookingData = { date: null, time: null };
+        let currentBookingsCache = []; // Cache delle prenotazioni caricate dal server
 
         // --- Funzioni Helper ---
-        function getData(key) {
-            try {
-                const data = localStorage.getItem(key);
-                if (data === null || data === '') return [];
-                const parsedData = JSON.parse(data);
-                return Array.isArray(parsedData) ? parsedData : [];
-            } catch (e) {
-                console.error(`Errore lettura/parse localStorage [${key}]:`, e);
-                try { localStorage.removeItem(key); } catch (removeError) { console.error(`Errore rimozione chiave corrotta [${key}]:`, removeError); }
-                return [];
-            }
-        }
-        function saveData(key, data) {
-            try {
-                if (!Array.isArray(data)) { console.error(`Tentativo di salvare dati non array [${key}]:`, data); return; }
-                localStorage.setItem(key, JSON.stringify(data));
-            } catch (e) { console.error(`Errore scrittura localStorage [${key}]:`, e); showMessage("Errore nel salvataggio dati.", "error"); }
-        }
+        // getData e saveData non servono più per dati persistenti
         function showMessage(text, type = 'error') {
              if (!messageArea) return;
-             console.log(`Mostrando messaggio (${type}): ${text}`); // Debug
+             console.log(`Mostrando messaggio (${type}): ${text}`);
              while (messageArea.firstChild) { messageArea.removeChild(messageArea.firstChild); }
              const messageDiv = document.createElement('div');
              messageDiv.className = `message message-${type}`;
@@ -227,23 +193,21 @@
              } catch (e) { console.error("Errore formattazione header giorno:", dateString, e); return { dayName: 'Err', shortDate: '' }; }
         }
 
-        // --- Logica di Autenticazione (Completa e Ripristinata) ---
+        // --- Logica di Autenticazione (con Fetch) ---
         function showSignupForm() {
-            console.log("showSignupForm chiamata"); // Debug
             if (!loginForm || !signupForm) return;
             loginForm.style.display = 'none';
             signupForm.style.display = 'block';
             if(messageArea) messageArea.innerHTML = '';
         }
         function showLoginForm() {
-            console.log("showLoginForm chiamata"); // Debug
              if (!loginForm || !signupForm) return;
             signupForm.style.display = 'none';
             loginForm.style.display = 'block';
             if(messageArea) messageArea.innerHTML = '';
         }
-        function signupUser() {
-            console.log("signupUser chiamata"); // Debug
+        async function signupUser() {
+            console.log("signupUser chiamata");
             const usernameInput = document.getElementById('signupUsername');
             const passwordInput = document.getElementById('signupPassword');
             if (!usernameInput || !passwordInput) { console.error("Input signup non trovati!"); return; }
@@ -252,25 +216,33 @@
 
             if (!username || !password) { showMessage('Per favore, inserisci username e password.'); return; }
 
-            const users = getData(STORAGE_KEYS.USERS);
-            if (!Array.isArray(users)) {
-                 console.error("Dati utenti non validi, reset in corso.");
-                 saveData(STORAGE_KEYS.USERS, []);
-                 showMessage("Errore dati utenti, riprova.", "error"); return;
-            }
-            const existingUser = users.find(user => user && user.username === username);
-            if (existingUser) {
-                showMessage('Username già esistente. Scegline un altro.');
-            } else {
-                users.push({ username, password });
-                saveData(STORAGE_KEYS.USERS, users);
-                showMessage('Registrazione avvenuta con successo! Ora puoi accedere.', 'success');
-                usernameInput.value = ''; passwordInput.value = '';
-                showLoginForm();
+            const formData = new FormData();
+            formData.append('action', 'signup');
+            formData.append('username', username);
+            formData.append('password', password);
+
+            try {
+                const response = await fetch(API_URL, { method: 'POST', body: formData });
+                const result = await response.json(); // Leggi sempre la risposta
+
+                if (!response.ok) { // Controlla se la risposta HTTP è OK (es. 200)
+                     throw new Error(result.message || `Errore HTTP: ${response.status}`);
+                }
+
+                if (result.success) {
+                    showMessage(result.message || 'Registrazione avvenuta con successo! Ora puoi accedere.', 'success');
+                    usernameInput.value = ''; passwordInput.value = '';
+                    showLoginForm();
+                } else {
+                    showMessage(result.message || 'Errore durante la registrazione.');
+                }
+            } catch (error) {
+                console.error("Errore fetch signup:", error);
+                showMessage(error.message || "Errore di comunicazione con il server.", "error");
             }
         }
-        function loginUser() {
-            console.log("loginUser chiamata"); // Debug
+        async function loginUser() {
+            console.log("loginUser chiamata");
             const usernameInput = document.getElementById('loginUsername');
             const passwordInput = document.getElementById('loginPassword');
              if (!usernameInput || !passwordInput) { console.error("Input login non trovati!"); return; }
@@ -279,30 +251,47 @@
 
             if (!username || !password) { showMessage('Per favore, inserisci username e password.'); return; }
 
-            const users = getData(STORAGE_KEYS.USERS);
-            if (!Array.isArray(users)) { console.error("Dati utenti non validi."); showMessage("Errore dati utenti, riprova.", "error"); return; }
+            const formData = new FormData();
+            formData.append('action', 'login');
+            formData.append('username', username);
+            formData.append('password', password);
 
-            const user = users.find(u => u && u.username === username && u.password === password);
-            if (user) {
-                 console.log("Login riuscito per utente:", username); // Debug
-                 try { localStorage.setItem(STORAGE_KEYS.LOGGED_IN_USER, username); }
-                 catch (e) { console.error("Errore scrittura localStorage (login):", e); showMessage("Errore durante l'accesso.", "error"); return; }
-                usernameInput.value = ''; passwordInput.value = '';
-                initializeApp(); // Ricarica l'interfaccia
-            } else {
-                console.log("Login fallito per utente:", username); // Debug
-                showMessage('Username o password non validi.');
+            try {
+                const response = await fetch(API_URL, { method: 'POST', body: formData });
+                const result = await response.json();
+
+                if (!response.ok) {
+                     throw new Error(result.message || `Errore HTTP: ${response.status}`);
+                }
+
+                if (result.success && result.username) {
+                     console.log("Login riuscito per utente:", result.username);
+                     try { sessionStorage.setItem(STORAGE_KEYS.LOGGED_IN_USER, result.username); }
+                     catch(e) { console.error("Errore scrittura sessionStorage:", e); /* Non bloccare */ }
+                    usernameInput.value = ''; passwordInput.value = '';
+                    initializeApp();
+                } else {
+                    // L'errore viene gestito dal catch se response.ok è false
+                    // Se response.ok è true ma success è false (caso strano)
+                    console.log("Login fallito:", result.message);
+                    showMessage(result.message || 'Username o password non validi.');
+                }
+            } catch (error) {
+                console.error("Errore fetch login:", error);
+                showMessage(error.message || "Errore di comunicazione con il server.", "error");
             }
         }
         function logoutUser() {
-             console.log("logoutUser chiamata"); // Debug
-             try { localStorage.removeItem(STORAGE_KEYS.LOGGED_IN_USER); }
-             catch (e) { console.error("Errore rimozione localStorage (logout):", e); }
+             console.log("logoutUser chiamata");
+             try { sessionStorage.removeItem(STORAGE_KEYS.LOGGED_IN_USER); }
+             catch (e) { console.error("Errore rimozione sessionStorage:", e); }
+            currentBookingsCache = []; // Pulisci cache
+            tempBookingData = { date: null, time: null };
             initializeApp();
         }
         function getLoggedInUser() {
-             try { return localStorage.getItem(STORAGE_KEYS.LOGGED_IN_USER); }
-             catch (e) { console.error("Errore lettura localStorage (getLoggedInUser):", e); return null; }
+             try { return sessionStorage.getItem(STORAGE_KEYS.LOGGED_IN_USER); }
+             catch (e) { console.error("Errore lettura sessionStorage:", e); return null; }
         }
 
         // --- Logica Modal Prenotazione ---
@@ -322,55 +311,64 @@
             tempBookingData.time = null;
         }
 
-        // --- Logica delle Prenotazioni ---
+        // --- Logica delle Prenotazioni (con Fetch) ---
+        async function fetchBookings() {
+             console.log("fetchBookings: Caricamento...");
+             try {
+                 const response = await fetch(`${API_URL}?action=getBookings`);
+                 const result = await response.json();
+                 if (!response.ok) throw new Error(result.message || `Errore HTTP: ${response.status}`);
+
+                 if (result.success && Array.isArray(result.bookings)) {
+                     currentBookingsCache = result.bookings;
+                     console.log(`fetchBookings: Caricate ${currentBookingsCache.length} prenotazioni.`);
+                     return true;
+                 } else {
+                     console.error("fetchBookings: Risposta non valida:", result);
+                     showMessage("Errore caricamento prenotazioni.", "error");
+                     currentBookingsCache = []; return false;
+                 }
+             } catch (error) {
+                 console.error("Errore fetch getBookings:", error);
+                 showMessage(error.message || "Errore di comunicazione.", "error");
+                 currentBookingsCache = []; return false;
+             }
+        }
         function generateTimeSlotsForDay(dateString, columnElement) {
             const slotsContainer = columnElement.querySelector('.time-slots-wrapper');
-            if (!slotsContainer) { console.error("Contenitore slot non trovato per la colonna:", dateString); return; }
+            if (!slotsContainer) { console.error("Contenitore slot non trovato:", dateString); return; }
             slotsContainer.innerHTML = '';
 
-            const bookings = getData(STORAGE_KEYS.BOOKINGS);
-            if (!Array.isArray(bookings)) return;
+            const bookings = currentBookingsCache; // Usa la cache
 
             const now = new Date();
             const today = getTodayAtMidnight();
             const [year, month, day] = dateString.split('-').map(Number);
             const selectedDayMidnight = new Date(year, month - 1, day);
-
             const isToday = selectedDayMidnight.getTime() === today.getTime();
             const isPastDay = selectedDayMidnight < today;
 
-            let slotsGenerated = 0; // Contatore per vedere se generiamo qualcosa
-
+            let slotsGenerated = 0;
             for (let hour = START_HOUR; hour < END_HOUR; hour++) {
                 const time = `${String(hour).padStart(2, '0')}:00`;
                 const isBooked = bookings.some(booking => booking && booking.date === dateString && booking.time === time);
                 let isPastTime = false;
                 if (isToday) { isPastTime = hour < now.getHours(); }
-
-                // Non generare slot per giorni passati (anche se non dovrebbero essere mostrati)
                 if (isPastDay) continue;
 
                 const slotElement = document.createElement('button');
                 slotElement.textContent = time;
                 slotElement.classList.add('time-slot');
-
                 if (isBooked) {
-                    slotElement.classList.add('booked');
-                    slotElement.title = 'Fascia oraria già prenotata';
-                    slotElement.disabled = true;
+                    slotElement.classList.add('booked'); slotElement.title = 'Già prenotato'; slotElement.disabled = true;
                 } else if (isPastTime) {
-                     slotElement.classList.add('disabled');
-                     slotElement.title = 'Fascia oraria passata';
-                     slotElement.disabled = true;
+                     slotElement.classList.add('disabled'); slotElement.title = 'Passato'; slotElement.disabled = true;
                 } else {
-                    slotElement.classList.add('available');
-                    slotElement.onclick = () => openBookingModal(dateString, time);
-                    slotElement.title = 'Clicca per prenotare';
+                    slotElement.classList.add('available'); slotElement.onclick = () => openBookingModal(dateString, time); slotElement.title = 'Prenota';
                 }
                 slotsContainer.appendChild(slotElement);
                 slotsGenerated++;
             }
-             // Se non abbiamo generato slot (es. tutti passati o prenotati), mostra un messaggio
              if (slotsGenerated === 0) {
                  slotsContainer.innerHTML = '<p class="text-xs text-center text-gray-400 py-4">Nessun orario disponibile.</p>';
              }
@@ -386,74 +384,82 @@
                 const date = new Date(today);
                 date.setDate(today.getDate() + i);
                 const dateStr = formatDateYYYYMMDD(date);
-                if(dateStr) datesToShow.push(dateStr); // Aggiungi solo se la formattazione ha successo
+                if(dateStr) datesToShow.push(dateStr);
             }
 
-             if (datesToShow.length === 0) {
-                 columnsLoading.textContent = 'Nessun giorno disponibile.'; return;
-             }
+             if (datesToShow.length === 0) { columnsLoading.textContent = 'Nessun giorno disponibile.'; return; }
 
             datesToShow.forEach(dateString => {
                 const column = document.createElement('div');
                 column.classList.add('day-column');
                 column.dataset.date = dateString;
-
                 const { dayName, shortDate } = formatDayHeader(dateString);
-
                 column.innerHTML = `
-                    <div class="day-header">
-                        <span class="day-name">${dayName}</span>
-                        <span class="day-date-num">${shortDate}</span>
-                    </div>
-                    <div class="time-slots-wrapper">
-                        <p class="text-xs text-center text-gray-400 py-4">Caricamento...</p>
-                    </div>
-                `;
+                    <div class="day-header"><span class="day-name">${dayName}</span><span class="day-date-num">${shortDate}</span></div>
+                    <div class="time-slots-wrapper">{/* Popolato da generateTimeSlotsForDay */}</div>`;
                 daysColumnsContainer.appendChild(column);
-                setTimeout(() => generateTimeSlotsForDay(dateString, column), 10);
+                // Genera slot usando la cache (che dovrebbe essere stata caricata)
+                generateTimeSlotsForDay(dateString, column);
             });
             columnsLoading.style.display = 'none';
         }
-        function confirmBookingWithComment() {
+        async function confirmBookingWithComment() {
             const loggedInUser = getLoggedInUser();
             const { date, time } = tempBookingData;
             const comment = bookingCommentTextarea.value.trim();
 
-            if (!loggedInUser || !date || !time) { showMessage('Errore durante la prenotazione. Riprova.'); closeBookingModal(); return; }
+            if (!loggedInUser || !date || !time) { showMessage('Errore: Dati prenotazione mancanti.'); closeBookingModal(); return; }
 
-            const bookings = getData(STORAGE_KEYS.BOOKINGS);
-            if (!Array.isArray(bookings)) { showMessage("Errore dati prenotazioni.", "error"); closeBookingModal(); return; }
+            const formData = new FormData();
+            formData.append('action', 'addBooking');
+            formData.append('date', date);
+            formData.append('time', time);
+            formData.append('user', loggedInUser);
+            formData.append('comment', comment);
 
-            const alreadyBooked = bookings.some(booking => booking && booking.date === date && booking.time === time);
-            if (alreadyBooked) { showMessage('Spiacenti, questa fascia oraria è stata appena prenotata.'); closeBookingModal(); return; }
+            try {
+                const response = await fetch(API_URL, { method: 'POST', body: formData });
+                 const result = await response.json();
+                 if (!response.ok) throw new Error(result.message || `Errore HTTP: ${response.status}`);
 
-            bookings.push({ date: date, time: time, user: loggedInUser, comment: comment });
-            saveData(STORAGE_KEYS.BOOKINGS, bookings);
-
-            showMessage(`Appuntamento prenotato per le ${time} di ${formatDisplayDate(date)}!`, 'success');
-            closeBookingModal();
-
-            const columnToUpdate = daysColumnsContainer.querySelector(`.day-column[data-date="${date}"]`);
-            if (columnToUpdate) {
-                generateTimeSlotsForDay(date, columnToUpdate);
-            } else { console.warn("Colonna da aggiornare non trovata:", date); }
+                 if (result.success) {
+                     showMessage(result.message || 'Prenotazione confermata!', 'success');
+                     closeBookingModal();
+                     await fetchBookings(); // Aggiorna cache
+                     const columnToUpdate = daysColumnsContainer.querySelector(`.day-column[data-date="${date}"]`);
+                     if (columnToUpdate) generateTimeSlotsForDay(date, columnToUpdate);
+                 } else {
+                     showMessage(result.message || 'Errore durante la prenotazione.');
+                     if (result.message && result.message.toLowerCase().includes('già prenotata')) {
+                          closeBookingModal();
+                          await fetchBookings();
+                           const columnToUpdate = daysColumnsContainer.querySelector(`.day-column[data-date="${date}"]`);
+                           if (columnToUpdate) generateTimeSlotsForDay(date, columnToUpdate);
+                     }
+                 }
+            } catch (error) {
+                 console.error("Errore fetch addBooking:", error);
+                 showMessage(error.message || "Errore di comunicazione.", "error");
+            }
         }
 
         // --- Inizializzazione ---
-        function initializeApp() {
-             console.log("initializeApp chiamata");
+        async function initializeApp() {
+             console.log("initializeApp Cliente chiamata");
              if (!authSection || !bookingSection || !daysColumnsContainer) { console.error("ERRORE CRITICO: Elementi HTML mancanti!"); return; }
              try {
-                 if (!localStorage.getItem(STORAGE_KEYS.USERS) || !Array.isArray(getData(STORAGE_KEYS.USERS))) { saveData(STORAGE_KEYS.USERS, []); }
-                 if (!localStorage.getItem(STORAGE_KEYS.BOOKINGS) || !Array.isArray(getData(STORAGE_KEYS.BOOKINGS))) { saveData(STORAGE_KEYS.BOOKINGS, []); }
-
                 const loggedInUser = getLoggedInUser();
-                console.log("Utente loggato:", loggedInUser);
+                console.log("Utente loggato (sessionStorage):", loggedInUser);
                 if (loggedInUser) {
                     authSection.style.display = 'none';
                     bookingSection.style.display = 'block';
                     if (loggedInUsernameSpan) loggedInUsernameSpan.textContent = loggedInUser;
-                    createDayColumns();
+                    const bookingsLoaded = await fetchBookings(); // Carica dati
+                    if (bookingsLoaded) {
+                        createDayColumns(); // Crea colonne e popola slot
+                    } else {
+                         if(columnsLoading) columnsLoading.textContent = 'Impossibile caricare il calendario.';
+                    }
                 } else {
                     authSection.style.display = 'block';
                     bookingSection.style.display = 'none';
@@ -466,7 +472,7 @@
              } finally {
                  if(messageArea) messageArea.innerHTML = '';
                  closeBookingModal();
-                 console.log("initializeApp completata.");
+                 console.log("initializeApp Cliente completata.");
              }
         }
 
@@ -484,4 +490,3 @@
 
 </body>
 </html>
-
